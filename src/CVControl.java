@@ -14,7 +14,7 @@ import javax.lang.model.util.SimpleElementVisitor6;
 
 abstract public class CVControl {
         private String name;
-        private BooleanProperty enabled;
+        protected BooleanProperty enabled;
     private SimpleListProperty<Value> values;
     public CVControl(String name) {
         this.name = name;
