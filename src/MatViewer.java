@@ -35,7 +35,7 @@ public class MatViewer extends ImageView {
         if (xPos < reloaded.cols() && xPos < reloaded.rows()) {
             byte[] values = new byte[3];
             reloaded.get(yPos, xPos, values);
-            return String.format("%d %d %d", values[0] & 0xff, values[1] & 0xff, values[2] & 0xff);
+            return String.format("B:%d G:%d R:%d", values[2] & 0xff, values[1] & 0xff, values[0] & 0xff);
         } else {
             return "";
         }
