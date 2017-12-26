@@ -21,7 +21,7 @@ public class CameraFeeder extends CVFeeder {
         return camHeight;
     }
     public Mat get() {
-        if (enabledp.get()) {
+        if (enabled.get()) {
             camera.read(camMat);
         }
         return camMat;

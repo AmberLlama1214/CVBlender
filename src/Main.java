@@ -1,8 +1,8 @@
 import javafx.application.Application;
-import javafx.beans.property.SimpleListProperty;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -13,10 +13,11 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import sun.java2d.pipe.SpanShapeRenderer;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
-    SimpleListProperty<CVControl> controls;
+    ArrayList<CVControl> controls;
     MatViewer matViewer;
     ScheduledService<Void> job;
     public static void main(String[] args) {
@@ -24,15 +25,21 @@ public class Main extends Application {
     }
     public void init() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        controls = new SimpleListProperty<>();
+        controls = new ArrayList<>();
     }
     public void start(Stage primaryStage) {
+        // controls
+        controls.add(new CameraFeeder());
+
         BorderPane root = new BorderPane();
+
+        // center : MatViewer
         AnchorPane center = new AnchorPane();
         matViewer = new MatViewer();
-        matViewer.setMat(hSBMat());
         center.getChildren().add(matViewer);
         root.setCenter(center);
+
+        // left : controls
         VBox box = new VBox();
         for (CVControl control : controls) {
             box.getChildren().add(control.render());
@@ -40,6 +47,15 @@ public class Main extends Application {
         ScrollPane nodes = new ScrollPane(box);
         nodes.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         root.setLeft(nodes);
+
+        // bottom : value label
+        Label matValue = new Label();
+        matViewer.setOnMouseMoved((e) -> {
+            String info = matViewer.getValue((int)e.getX(), (int)e.getY());
+            matValue.setText(info);
+        });
+        root.setBottom(matValue);
+
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("CV Blender");
