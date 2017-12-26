@@ -11,6 +11,7 @@ public class MatViewer extends ImageView {
     public MatViewer() {
         reloaded = new Mat();
         image = null;
+
     }
 
     public void setMat(Mat mat) {
@@ -28,5 +29,15 @@ public class MatViewer extends ImageView {
         }
         image.getPixelWriter().setPixels(0,0,cols,rows, PixelFormat.getByteRgbInstance(), data, 0, (int) reloaded.step1());
         setImage(image);
+    }
+
+    public String getValue(int xPos, int yPos) {
+        if (xPos < reloaded.cols() && xPos < reloaded.rows()) {
+            byte[] values = new byte[3];
+            reloaded.get(yPos, xPos, values);
+            return String.format("B:%d G:%d R:%d", values[2] & 0xff, values[1] & 0xff, values[0] & 0xff);
+        } else {
+            return "";
+        }
     }
 }
